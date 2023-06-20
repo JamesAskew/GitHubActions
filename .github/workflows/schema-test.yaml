@@ -28,6 +28,7 @@ jobs:
         name: Add a comment to the PR
         if: ${{ failure() }}
         with:
+          github-token: ${{ secrets.WS-14202-PrCommentingFromActions }}
           script: |
             github.rest.issues.createComment({
               issue_number: context.issue.number,
@@ -35,4 +36,4 @@ jobs:
               repo: context.repo.repo,
               body: '🚨 - Changes in this PR are incompatible with the new Hot Chocolate GraphQL engine.'
             })
-             ß
+            
