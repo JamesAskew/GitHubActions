@@ -28,7 +28,7 @@ jobs:
         name: Add a comment to the PR
         if: ${{ failure() }}
         with:
-          github-token: ${{ secrets.WS-14202-PrCommentingFromActions }}
+          github-token: ${{ secrets.WS_14202_PRCOMMENTINGFROMACTIONS }}
           script: |
             github.rest.issues.createComment({
               issue_number: context.issue.number,
