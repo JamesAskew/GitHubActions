@@ -47,7 +47,7 @@ jobs:
           payload: |
             {
               "GITHUB_ACTION_REPOSITORY": ${{ github.GITHUB_ACTION_REPOSITORY }},
-              "GITHUB_ACTION": ${{ github.GITHUB_ACTION }}
+              "GITHUB_ACTION": ${{ github.GITHUB_ACTION }},
               "GITHUB_ACTOR": "${{ github.GITHUB_ACTOR }}
             }
         env:
