@@ -19,7 +19,7 @@ jobs:
       - name: Install dependencies
         run: dotnet restore
       - name: Build
-        run: dotnet build --configuration Release --no-restore --nologo --output $DOTNET_INSTALL_DIR
+        run: dotnet build --configuration Release --no-restore --nologo
       - uses: actions/github-script@v6
         name: Add a Warning comment to the PR
         if: ${{ failure() }}
@@ -38,7 +38,7 @@ jobs:
     needs: build
     steps:
       - name: Test
-        run: dotnet test --directory $DOTNET_INSTALL_DIR --no-restore --verbosity normal --filter FullyQualifiedName=GitHubActions.Tests.Tests.Test1
+        run: dotnet test --output $DOTNET_INSTALL_DIR --no-restore --verbosity normal --filter FullyQualifiedName=GitHubActions.Tests.Tests.Test1
       - uses: actions/github-script@v6
         name: Add a Warning comment to the PR
         if: ${{ failure() }}
