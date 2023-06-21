@@ -62,4 +62,4 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               body: '### ✅ These changes are fully compatible with the HotChocolate GraphQL engine  🎉'
-            })
+            }) 
