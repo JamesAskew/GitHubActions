@@ -25,7 +25,7 @@ jobs:
       - name: Test
         run: dotnet test --no-restore --verbosity normal --filter FullyQualifiedName=GitHubActions.Tests.Tests.Test1
       - uses: actions/github-script@v6
-        name: Add a comment to the PR
+        name: Add a Warning comment to the PR
         if: ${{ failure() }}
         with:
           github-token: ${{ secrets.WS_14202_PRCOMMENTINGFROMACTIONS }}
@@ -34,6 +34,17 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: '🚨 - Changes in this PR are incompatible with the new Hot Chocolate GraphQL engine.'
+              body: '⚠️ These changes are incompatible with the HotChocolate GraphQL engine'
             })
-            
+      - uses: actions/github-script@v6
+        name: Add a Success comment to the PR
+        if: ${{ success() }}
+        with:
+          github-token: ${{ secrets.WS_14202_PRCOMMENTINGFROMACTIONS }}
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '### ✅ These changes are fully compatible with the HotChocolate GraphQL engine  🎉'
+            })
