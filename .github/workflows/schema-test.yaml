@@ -16,8 +16,7 @@ jobs:
       - name: Build
         run: dotnet build --configuration Release --no-restore --nologo
       - uses: actions/github-script@v6
-        name: BuildBrokenComment
-        description: A a comment to the PR
+        name: Add an error comment to the PR
         if: ${{ failure() }}
         with:
           github-token: ${{ secrets.WS_14202_PRCOMMENTINGFROMACTIONS }}
