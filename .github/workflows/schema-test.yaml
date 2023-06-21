@@ -16,7 +16,8 @@ jobs:
       - name: Build
         run: dotnet build --configuration Release --no-restore --nologo
       - uses: actions/github-script@v6
-        name: Add a Warning comment to the PR
+        name: BuildBrokenComment
+        description: A a comment to the PR
         if: ${{ failure() }}
         with:
           github-token: ${{ secrets.WS_14202_PRCOMMENTINGFROMACTIONS }}
@@ -33,7 +34,7 @@ jobs:
         run: dotnet test --no-restore --verbosity normal --filter FullyQualifiedName=GitHubActions.Tests.Tests.Test1
       - uses: actions/github-script@v6
         name: Add a Warning comment to the PR
-        if: ${{ failure() }}
+        if: ${{ failure() && steps.Build.conclusion == 'success'}}
         with:
           github-token: ${{ secrets.WS_14202_PRCOMMENTINGFROMACTIONS }}
           script: |
