@@ -39,6 +39,19 @@ jobs:
               repo: context.repo.repo,
               body: '## 🚨 These changes break `dotnet build`'
             })  
+      - name: Notify Squad-Kaizen 🌊
+        if: ${{ failure() }}
+        id: slack
+        uses: slackapi/slack-github-action@v1.24.0
+        with:
+          payload: |
+            {
+              "GITHUB_ACTION_REPOSITORY": ${{ github.GITHUB_ACTION_REPOSITORY }},
+              "GITHUB_ACTION": ${{ github.GITHUB_ACTION }}
+              "GITHUB_ACTOR": "${{ github.GITHUB_ACTOR }}
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
       - name: dotnet Test
         run: dotnet test --no-restore --verbosity normal --filter FullyQualifiedName=GitHubActions.Tests.Tests.Test1
       - uses: actions/github-script@v6
