@@ -3,15 +3,14 @@ name: dotnet package
 on: [pull_request]
 
 jobs:
-  build-and-test:
-    name: Build and Test the Solution
 
+  build:
+    name: Build the Solution
     runs-on: ubuntu-latest
 # What does this do?
 #    strategy:
 #      matrix:
 #        dotnet-version: [ '3.1.x', '6.0.x' ]
-
     steps:
       - uses: actions/checkout@v3
       - name: Setup .NET Core SDK ${{ matrix.dotnet-version }}
@@ -22,6 +21,22 @@ jobs:
         run: dotnet restore
       - name: Build
         run: dotnet build --configuration Release --no-restore
+      - uses: actions/github-script@v6
+        name: Add a Warning comment to the PR
+        if: ${{ failure() }}
+        with:
+          github-token: ${{ secrets.WS_14202_PRCOMMENTINGFROMACTIONS }}
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '## 🚨 These changes break `dotnet build`'
+            })
+  test:
+    name: Run the Schema Comparison Test
+    runs-on: ubuntu-latest
+    steps:
       - name: Test
         run: dotnet test --no-restore --verbosity normal --filter FullyQualifiedName=GitHubActions.Tests.Tests.Test1
       - uses: actions/github-script@v6
