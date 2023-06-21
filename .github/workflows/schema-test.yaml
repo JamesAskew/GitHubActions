@@ -1,9 +1,8 @@
 name: Run Schema Comparison Test
 on: [pull_request]
 jobs:
-
-  test:
-    name: Run the Schema Comparison Test
+  schema-comparison-test:
+    name: Schema Comparison Test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -20,13 +19,13 @@ jobs:
           else
             echo "File not found: $buildProps"
           fi
-      - name: Setup .NET Core SDK ${{ matrix.dotnet-version }}
+      - name: Setup .NET Core SDK
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: 7.0.x
       - name: Install dependencies
         run: dotnet restore
-      - name: Build
+      - name: dotnet Build
         run: dotnet build --configuration Release --no-restore --nologo
       - uses: actions/github-script@v6
         name: Add an error comment to the PR
@@ -40,9 +39,7 @@ jobs:
               repo: context.repo.repo,
               body: '## 🚨 These changes break `dotnet build`'
             })  
-        
-      
-      - name: Test
+      - name: dotnet Test
         run: dotnet test --no-restore --verbosity normal --filter FullyQualifiedName=GitHubActions.Tests.Tests.Test1
       - uses: actions/github-script@v6
         name: Add a Warning comment to the PR
