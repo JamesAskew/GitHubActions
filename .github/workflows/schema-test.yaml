@@ -1,7 +1,5 @@
 name: Run Schema Comparison Test
 on: [pull_request]
-env:
-  DOTNET_INSTALL_DIR: "./.dotnet"
 jobs:
   build:
     name: Build the Solution
@@ -37,8 +35,17 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     steps:
+      - uses: actions/checkout@v3
+      - name: Setup .NET Core SDK ${{ matrix.dotnet-version }}
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 7.0.x
+      - name: Install dependencies
+        run: dotnet restore
+      - name: Build
+        run: dotnet build --configuration Release --no-restore --nologo
       - name: Test
-        run: dotnet test $DOTNET_INSTALL_DIR --no-restore --verbosity normal --filter FullyQualifiedName=GitHubActions.Tests.Tests.Test1
+        run: dotnet test --no-restore --verbosity normal --filter FullyQualifiedName=GitHubActions.Tests.Tests.Test1
       - uses: actions/github-script@v6
         name: Add a Warning comment to the PR
         if: ${{ failure() }}
