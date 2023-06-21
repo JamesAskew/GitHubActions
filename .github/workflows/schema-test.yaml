@@ -7,6 +7,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - name: Uncomment HotChocolate Source Generator Toggle
+        shell: bash
+        run: |
+          buildProps="Directory.Build.props"
+          if [ -f "$buildProps" ]; then
+            commented="<!--[[:blank:]]*<DefineConstants>HotChocolate_Source_Generation_Feature_Toggle<\/DefineConstants>-->"
+            uncommented="<DefineConstants>HotChocolate_Source_Generation_Feature_Toggle<\/DefineConstants>"  
+            sedString="s/${commented}/${uncommented}/"
+            sed -i '' $sedString "$buildProps"
+            echo "Constant HotChocolate_Source_Generation_Feature_Toggle is uncommented."
+          else
+            echo "File not found: $buildProps"
+          fi
       - name: Setup .NET Core SDK ${{ matrix.dotnet-version }}
         uses: actions/setup-dotnet@v3
         with:
