@@ -1,5 +1,7 @@
 name: Run Schema Comparison Test
 on: [pull_request]
+env:
+  DOTNET_INSTALL_DIR: "./.dotnet"
 jobs:
   build:
     name: Build the Solution
