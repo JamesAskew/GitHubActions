@@ -1,13 +1,10 @@
 name: Run Schema Comparison Test
 on: [pull_request]
 jobs:
-  build:
-    name: Build the Solution
+
+  test:
+    name: Run the Schema Comparison Test
     runs-on: ubuntu-latest
-# What does this do?
-#    strategy:
-#      matrix:
-#        dotnet-version: [ '3.1.x', '6.0.x' ]
     steps:
       - uses: actions/checkout@v3
       - name: Setup .NET Core SDK ${{ matrix.dotnet-version }}
@@ -29,21 +26,9 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               body: '## 🚨 These changes break `dotnet build`'
-            })
-  test:
-    name: Run the Schema Comparison Test
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - uses: actions/checkout@v3
-      - name: Setup .NET Core SDK ${{ matrix.dotnet-version }}
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: 7.0.x
-      - name: Install dependencies
-        run: dotnet restore
-      - name: Build
-        run: dotnet build --configuration Release --no-restore --nologo
+            })  
+        
+      
       - name: Test
         run: dotnet test --no-restore --verbosity normal --filter FullyQualifiedName=GitHubActions.Tests.Tests.Test1
       - uses: actions/github-script@v6
