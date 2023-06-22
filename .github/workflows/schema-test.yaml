@@ -46,9 +46,8 @@ jobs:
         with:
           payload: |
             {
-              "GITHUB_ACTION_REPOSITORY": "${{ github.event.number }} / ${{ github.event.issue.number }} / ${{github.repository}} / ${{github.repositoryUrl}}",
-              "GITHUB_ACTION": "${{ github.head_ref }}",
-              "GITHUB_ACTOR": "https://github.com/${{github.repository}}/pull/${{github.event.number}}"
+              "GITHUB_PR": "https://github.com/${{github.repository}}/pull/${{github.event.number}}",
+              "GITHUB_ACTOR": "${{ github.actor }}"
             }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
@@ -90,4 +89,4 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               body: '### ✅ These changes are fully compatible with the HotChocolate GraphQL engine 🎉'
-            })  
+            }) 
