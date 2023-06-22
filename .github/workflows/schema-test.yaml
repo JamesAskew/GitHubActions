@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: test variables
-        run: echo 
+        run: echo $GITHUB_ACTION_REPOSITORY
       - uses: actions/checkout@v3
       - name: Uncomment HotChocolate Source Generator Toggle
         shell: bash
@@ -43,7 +43,7 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: "$ERROR_MESSAGE"
+              body: '## 🚨 These changes break `dotnet build`'
             })  
       - name: Notify Squad-Kaizen 🌊
         if: ${{ failure() }}
@@ -54,7 +54,7 @@ jobs:
             {
               "GITHUB_ACTION_REPOSITORY": "$GITHUB_ACTION_REPOSITORY",
               "GITHUB_ACTION": "$GITHUB_ACTION",
-              "GITHUB_ACTOR": "$GITHUB_ACTOR",
+              "GITHUB_ACTOR": "$GITHUB_ACTOR"
             }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
@@ -70,7 +70,7 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: $WARNING_MESSAGE
+              body: '### ⚠️ These changes are incompatible with the HotChocolate GraphQL engine'
             })
       - name: Notify Squad-Kaizen 🌊
         if: ${{ failure() && steps.Build.conclusion == 'success' }}
@@ -95,5 +95,5 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: $SUCCESS_MESSAGE
+              body: '### ✅ These changes are fully compatible with the HotChocolate GraphQL engine 🎉'
             }) 
