@@ -10,77 +10,90 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: test variables
-        run: echo $GITHUB_ACTOR
-#      - uses: actions/checkout@v3
-#      - name: Uncomment HotChocolate Source Generator Toggle
-#        shell: bash
-#        run: |
-#          buildProps="Directory.Build.props"
-#          if [ -f "$buildProps" ]; then
-#            commented="<!--[[:blank:]]*<DefineConstants>HotChocolate_Source_Generation_Feature_Toggle<\/DefineConstants>-->"
-#            uncommented="<DefineConstants>HotChocolate_Source_Generation_Feature_Toggle<\/DefineConstants>"  
-#            sedString="s/${commented}/${uncommented}/"
-#            sed -i $sedString "$buildProps"
-#            echo "Constant HotChocolate_Source_Generation_Feature_Toggle is uncommented."
-#          else
-#            echo "File not found: $buildProps"
-#          fi
-#      - name: Setup .NET Core SDK
-#        uses: actions/setup-dotnet@v3
-#        with:
-#          dotnet-version: 7.0.x
-#      - name: Install dependencies
-#        run: dotnet restore
-#      - name: dotnet Build
-#        run: dotnet build --configuration Release --no-restore --nologo
-#      - uses: actions/github-script@v6
-#        name: Add an error comment to the PR
-#        if: ${{ failure() }}
-#        with:
-#          github-token: ${{ secrets.WS_14202_PRCOMMENTINGFROMACTIONS }}
-#          script: |
-#            github.rest.issues.createComment({
-#              issue_number: context.issue.number,
-#              owner: context.repo.owner,
-#              repo: context.repo.repo,
-#              body: $ERROR_MESSAGE
-#            })  
-#      - name: Notify Squad-Kaizen 🌊
-#        if: ${{ failure() }}
-#        id: slack
-#        uses: slackapi/slack-github-action@v1.24.0
-#        with:
-#          payload: |
-#            {
-#              "GITHUB_ACTION_REPOSITORY": "${{ github.GITHUB_ACTION_REPOSITORY }}",
-#              "GITHUB_ACTION": "github.GITHUB_ACTION_REPOSITORY",
-#              "GITHUB_ACTOR": "env.GITHUB_ACTOR",
-#            }
-#        env:
-#          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-#      - name: dotnet Test
-#        run: dotnet test --no-restore --verbosity normal --filter FullyQualifiedName=GitHubActions.Tests.Tests.Test1
-#      - uses: actions/github-script@v6
-#        name: Add a Warning comment to the PR
-#        if: ${{ failure() && steps.Build.conclusion == 'success'}}
-#        with:
-#          github-token: ${{ secrets.WS_14202_PRCOMMENTINGFROMACTIONS }}
-#          script: |
-#            github.rest.issues.createComment({
-#              issue_number: context.issue.number,
-#              owner: context.repo.owner,
-#              repo: context.repo.repo,
-#              body: $WARNING_MESSAGE
-#            })
-#      - uses: actions/github-script@v6
-#        name: Add a Success comment to the PR
-#        if: ${{ success() }}
-#        with:
-#          github-token: ${{ secrets.WS_14202_PRCOMMENTINGFROMACTIONS }}
-#          script: |
-#            github.rest.issues.createComment({
-#              issue_number: context.issue.number,
-#              owner: context.repo.owner,
-#              repo: context.repo.repo,
-#              body: $SUCCESS_MESSAGE
-#            }) 
+        run: echo 
+      - uses: actions/checkout@v3
+      - name: Uncomment HotChocolate Source Generator Toggle
+        shell: bash
+        run: |
+          buildProps="Directory.Build.props"
+          if [ -f "$buildProps" ]; then
+            commented="<!--[[:blank:]]*<DefineConstants>HotChocolate_Source_Generation_Feature_Toggle<\/DefineConstants>-->"
+            uncommented="<DefineConstants>HotChocolate_Source_Generation_Feature_Toggle<\/DefineConstants>"  
+            sedString="s/${commented}/${uncommented}/"
+            sed -i $sedString "$buildProps"
+            echo "Constant HotChocolate_Source_Generation_Feature_Toggle is uncommented."
+          else
+            echo "File not found: $buildProps"
+          fi
+      - name: Setup .NET Core SDK
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 7.0.x
+      - name: Install dependencies
+        run: dotnet restore
+      - name: dotnet Build
+        run: dotnet build --configuration Release --no-restore --nologo
+      - uses: actions/github-script@v6
+        name: Add an error comment to the PR
+        if: ${{ failure() }}
+        with:
+          github-token: ${{ secrets.WS_14202_PRCOMMENTINGFROMACTIONS }}
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: $ERROR_MESSAGE
+            })  
+      - name: Notify Squad-Kaizen 🌊
+        if: ${{ failure() }}
+        id: slack
+        uses: slackapi/slack-github-action@v1.24.0
+        with:
+          payload: |
+            {
+              "GITHUB_ACTION_REPOSITORY": "$GITHUB_ACTION_REPOSITORY",
+              "GITHUB_ACTION": "$GITHUB_ACTION",
+              "GITHUB_ACTOR": "$GITHUB_ACTOR",
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      - name: dotnet Test
+        run: dotnet test --no-restore --verbosity normal --filter FullyQualifiedName=GitHubActions.Tests.Tests.Test1
+      - uses: actions/github-script@v6
+        name: Add a Warning comment to the PR
+        if: ${{ failure() && steps.Build.conclusion == 'success' }}
+        with:
+          github-token: ${{ secrets.WS_14202_PRCOMMENTINGFROMACTIONS }}
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: $WARNING_MESSAGE
+            })
+      - name: Notify Squad-Kaizen 🌊
+        if: ${{ failure() && steps.Build.conclusion == 'success' }}
+        id: slack
+        uses: slackapi/slack-github-action@v1.24.0
+        with:
+          payload: |
+            {
+              "GITHUB_ACTION_REPOSITORY": "$GITHUB_ACTION_REPOSITORY",
+              "GITHUB_ACTION": "$GITHUB_ACTION",
+              "GITHUB_ACTOR": "$GITHUB_ACTOR",
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      - uses: actions/github-script@v6
+        name: Add a Success comment to the PR
+        if: ${{ success() }}
+        with:
+          github-token: ${{ secrets.WS_14202_PRCOMMENTINGFROMACTIONS }}
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: $SUCCESS_MESSAGE
+            }) 
