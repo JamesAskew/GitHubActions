@@ -5,8 +5,6 @@ jobs:
     name: Schema Comparison Test
     runs-on: ubuntu-latest
     steps:
-      - name: test variables
-        run: echo $GITHUB_ACTION_REPOSITORY
       - uses: actions/checkout@v3
       - name: Uncomment HotChocolate Source Generator Toggle
         shell: bash
