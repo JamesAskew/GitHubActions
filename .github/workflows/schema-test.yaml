@@ -46,9 +46,9 @@ jobs:
         with:
           payload: |
             {
-              "GITHUB_ACTION_REPOSITORY": "${{GITHUB_ACTION_REPOSITORY}}",
-              "GITHUB_ACTION": "${{GITHUB_ACTION}}",
-              "GITHUB_ACTOR": "${{GITHUB_ACTOR}}"
+              "GITHUB_ACTION_REPOSITORY": "${{ github.action_repository }}",
+              "GITHUB_ACTION": "${{ github.action }}",
+              "GITHUB_ACTOR": "${{ github.actor }}"
             }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
