@@ -47,7 +47,7 @@ jobs:
             })  
       - name: Notify Squad-Kaizen 🌊
         if: ${{ failure() }}
-        id: slack
+        id: slack-error
         uses: slackapi/slack-github-action@v1.24.0
         with:
           payload: |
@@ -74,7 +74,7 @@ jobs:
             })
       - name: Notify Squad-Kaizen 🌊
         if: ${{ failure() && steps.Build.conclusion == 'success' }}
-        id: slack
+        id: slack-warning
         uses: slackapi/slack-github-action@v1.24.0
         with:
           payload: |
