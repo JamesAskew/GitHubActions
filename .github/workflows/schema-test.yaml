@@ -46,7 +46,7 @@ jobs:
         with:
           payload: |
             {
-              "MESSAGE": ":alert2: `hudl/graphql` has failed the `dotnet build` step in the following pr:"
+              "MESSAGE": ":alert2: `hudl/graphql` has failed the `dotnet build` step in the following pr:",
               "GITHUB_PR": "https://github.com/${{github.repository}}/pull/${{github.event.number}}",
               "GITHUB_ACTOR": "${{ github.actor }}"
             }
@@ -73,7 +73,7 @@ jobs:
         with:
           payload: |
             {
-              "MESSAGE": ":warning: The Schema Comparison test has failed in the following pr:"
+              "MESSAGE": ":warning: The Schema Comparison test has failed in the following pr:",
               "GITHUB_PR": "https://github.com/${{github.repository}}/pull/${{github.event.number}}",
               "GITHUB_ACTOR": "${{ github.actor }}"
             }
