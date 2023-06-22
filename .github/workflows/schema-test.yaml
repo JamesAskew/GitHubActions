@@ -53,7 +53,7 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
       - name: dotnet Test
-        run: dotnet test --no-restore --verbosity normal --filter FullyQualifiedName=GitHubActions.Tests.Tests.Test1
+        run: dotnet test --no-restore --verbosity normal --filter FullyQualifiedName=GitHubActions.Tests.Tests.Test2
       - uses: actions/github-script@v6
         name: Add a Warning comment to the PR
         if: ${{ failure() && steps.Build.conclusion == 'success' }}

@@ -5,7 +5,6 @@ public class Tests
     [SetUp]
     public void Setup()
     {
-        int i = "hello world";
     }
 
     [Test]
