@@ -25,7 +25,8 @@ jobs:
           dotnet-version: 7.0.x
       - name: Install dependencies
         run: dotnet restore
-      - name: Build
+      - name: dotnet build
+        id: Build
         run: dotnet build --configuration Release --no-restore --nologo
       - uses: actions/github-script@v6
         name: Add an error comment to the PR
