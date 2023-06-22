@@ -46,7 +46,7 @@ jobs:
         with:
           payload: |
             {
-              "GITHUB_ACTION_REPOSITORY": "${{ github.action_repository }}",
+              "GITHUB_ACTION_REPOSITORY": "${{ github.ref_name }}",
               "GITHUB_ACTION": "${{ github.action }}",
               "GITHUB_ACTOR": "${{ github.actor }}"
             }
