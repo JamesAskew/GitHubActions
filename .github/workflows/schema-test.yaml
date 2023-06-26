@@ -40,19 +40,19 @@ jobs:
               repo: context.repo.repo,
               body: '## 🚨 These changes break `dotnet build`'
             })  
-      - name: Notify Squad-Kaizen 🌊
-        if: ${{ failure() }}
-        id: slack-error
-        uses: slackapi/slack-github-action@v1.24.0
-        with:
-          payload: |
-            {
-              "MESSAGE": ":alert2: `hudl/graphql` has failed the `dotnet build` step in the following pr:",
-              "GITHUB_PR": "https://github.com/${{github.repository}}/pull/${{github.event.number}}",
-              "GITHUB_ACTOR": "${{ github.actor }}"
-            }
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+#      - name: Notify Squad-Kaizen 🌊
+#        if: ${{ failure() }}
+#        id: slack-error
+#        uses: slackapi/slack-github-action@v1.24.0
+#        with:
+#          payload: |
+#            {
+#              "MESSAGE": ":alert2: `hudl/graphql` has failed the `dotnet build` step in the following pr:",
+#              "GITHUB_PR": "https://github.com/${{github.repository}}/pull/${{github.event.number}}",
+#              "GITHUB_ACTOR": "${{ github.actor }}"
+#            }
+#        env:
+#          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
       - name: dotnet Test
         run: dotnet test --no-restore --verbosity normal --filter FullyQualifiedName=GitHubActions.Tests.Tests.Test2
       - uses: actions/github-script@v6
@@ -69,19 +69,19 @@ jobs:
                     "### ⚠️ These changes are incompatible with the HotChocolate GraphQL engine
                     Right now, you don’t need to do anything, but in the future this warning will block your PR. If you’re curious about the changes to the GraphQL engine, head over to the #proj-graphql-beta-feedback channel."        
             })
-      - name: Notify Squad-Kaizen 🌊
-        if: ${{ failure() && steps.Build.conclusion == 'success' }}
-        id: slack-warning
-        uses: slackapi/slack-github-action@v1.24.0
-        with:
-          payload: |
-            {
-              "MESSAGE": ":warning: The Schema Comparison test has failed in the following pr:",
-              "GITHUB_PR": "https://github.com/${{github.repository}}/pull/${{github.event.number}}",
-              "GITHUB_ACTOR": "${{ github.actor }}"
-            }
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+#      - name: Notify Squad-Kaizen 🌊
+#        if: ${{ failure() && steps.Build.conclusion == 'success' }}
+#        id: slack-warning
+#        uses: slackapi/slack-github-action@v1.24.0
+#        with:
+#          payload: |
+#            {
+#              "MESSAGE": ":warning: The Schema Comparison test has failed in the following pr:",
+#              "GITHUB_PR": "https://github.com/${{github.repository}}/pull/${{github.event.number}}",
+#              "GITHUB_ACTOR": "${{ github.actor }}"
+#            }
+#        env:
+#          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
       - uses: actions/github-script@v6
         name: Add a Success comment to the PR
         if: ${{ success() }}
