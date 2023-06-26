@@ -65,9 +65,8 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: |\n
-                ### ⚠️ These changes are incompatible with the HotChocolate GraphQL engine\n
-                Right now, you don’t need to do anything, but in the future this warning will block your PR. If you’re curious about the changes to the GraphQL engine, head over to the #proj-graphql-beta-feedback channel.        
+              body: '### ⚠️ These changes are incompatible with the HotChocolate GraphQL engine\n
+                Right now, you don’t need to do anything, but in the future this warning will block your PR. If you’re curious about the changes to the GraphQL engine, head over to the #proj-graphql-beta-feedback channel.'        
             })
 #      - name: Notify Squad-Kaizen 🌊
 #        if: ${{ failure() && steps.Build.conclusion == 'success' }}
