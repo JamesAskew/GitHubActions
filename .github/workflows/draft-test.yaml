@@ -1,5 +1,7 @@
 name: Draft Actions Test
-on: [pull_request]
+on: 
+  pull_request:
+    types: [ready_for_review, edited, opened, synchronize]
 jobs:
   echo:
     if: github.event.pull_request.draft == false
