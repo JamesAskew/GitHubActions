@@ -1,0 +1,21 @@
+name: Draft Actions Test
+on: 
+  pull_request:
+    types: [ready_for_review, edited, opened, synchronize]
+jobs:
+  echo:
+    if: github.event.pull_request.draft == false
+    name: echo something
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v6
+        name: Add a comment to the PR
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: 'Hello World 3' 
+            })
+             
