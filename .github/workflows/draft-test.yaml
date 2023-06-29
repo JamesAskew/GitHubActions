@@ -1,0 +1,10 @@
+name: Draft Actions Test
+on: [pull_request]
+jobs:
+  echo:
+    if: github.event.pull_request.draft == false
+    name: echo something
+    runs-on: ubuntu-latest
+    steps:
+      - name: echo Hello World
+        run: echo "Hello World"

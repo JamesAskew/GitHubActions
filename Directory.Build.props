@@ -1,0 +1,13 @@
+<Project>
+    <PropertyGroup>
+        <!--
+        Uncomment the constant below to add the following to the solution
+        - Source generation of HotChocolate compatible types
+        - Partial classes which extend the generated HotChocolate compatible types
+        - HotChocolate routes
+        - HotChocolate middleware
+        - Additional unit tests
+    -->
+<!--<DefineConstants>HotChocolate_Source_Generation_Feature_Toggle</DefineConstants>-->
+    </PropertyGroup>
+</Project>

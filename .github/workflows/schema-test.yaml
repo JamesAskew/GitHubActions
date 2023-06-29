@@ -1,37 +1,96 @@
-name: dotnet package
-
+name: Run Schema Comparison Test
 on: [pull_request]
-
 jobs:
-  build-and-test:
-    name: Build and Test the Solution
-
+  schema-comparison-test:
+    if: github.event.pull_request.draft == false
+    name: Schema Comparison Test
     runs-on: ubuntu-latest
-# What does this do?
-#    strategy:
-#      matrix:
-#        dotnet-version: [ '3.1.x', '6.0.x' ]
-
     steps:
       - uses: actions/checkout@v3
-      - name: Setup .NET Core SDK ${{ matrix.dotnet-version }}
+      - name: Uncomment HotChocolate Source Generator Toggle
+        shell: bash
+        run: |
+          buildProps="Directory.Build.props"
+          if [ -f "$buildProps" ]; then
+            commented="<!--[[:blank:]]*<DefineConstants>HotChocolate_Source_Generation_Feature_Toggle<\/DefineConstants>-->"
+            uncommented="<DefineConstants>HotChocolate_Source_Generation_Feature_Toggle<\/DefineConstants>"  
+            sedString="s/${commented}/${uncommented}/"
+            sed -i $sedString "$buildProps"
+            echo "Constant HotChocolate_Source_Generation_Feature_Toggle is uncommented."
+          else
+            echo "File not found: $buildProps"
+          fi
+      - name: Setup .NET Core SDK
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: 7.0.x
       - name: Install dependencies
         run: dotnet restore
-      - name: Build
-        run: dotnet build --configuration Release --no-restore
-      - name: Test
-        run: dotnet test --no-restore --verbosity normal
+      - name: dotnet build
+        id: Build
+        run: dotnet build --configuration Release --no-restore --nologo
       - uses: actions/github-script@v6
-        name: Add a comment to the PR
+        name: Add an error comment to the PR
         if: ${{ failure() }}
         with:
+          github-token: ${{ secrets.WS_14202_PRCOMMENTINGFROMACTIONS }}
           script: |
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: '🚨 - Changes in this PR are incompatible with the new Hot Chocolate GraphQL engine.'
+              body: '## 🚨 These changes break `dotnet build`'
+            })  
+#      - name: Notify Squad-Kaizen 🌊
+#        if: ${{ failure() }}
+#        id: slack-error
+#        uses: slackapi/slack-github-action@v1.24.0
+#        with:
+#          payload: |
+#            {
+#              "MESSAGE": ":alert2: `hudl/graphql` has failed the `dotnet build` step in the following pr:",
+#              "GITHUB_PR": "https://github.com/${{github.repository}}/pull/${{github.event.number}}",
+#              "GITHUB_ACTOR": "${{ github.actor }}"
+#            }
+#        env:
+#          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      - name: dotnet Test
+        run: dotnet test --no-restore --verbosity normal --filter FullyQualifiedName=GitHubActions.Tests.Tests.Test2
+      - uses: actions/github-script@v6
+        name: Add a Warning comment to the PR
+        if: ${{ failure() && steps.Build.conclusion == 'success' }}
+        with:
+          github-token: ${{ secrets.WS_14202_PRCOMMENTINGFROMACTIONS }}
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: "### ⚠️ These changes are incompatible with the HotChocolate GraphQL engine\nRight now, you don’t need to do anything, but in the future this warning will block your PR. If you’re curious about the changes to the GraphQL engine, head over to the #proj-graphql-beta-feedback channel."        
             })
+#      - name: Notify Squad-Kaizen 🌊
+#        if: ${{ failure() && steps.Build.conclusion == 'success' }}
+#        id: slack-warning
+#        uses: slackapi/slack-github-action@v1.24.0
+#        with:
+#          payload: |
+#            {
+#              "MESSAGE": ":warning: The Schema Comparison test has failed in the following pr:",
+#              "GITHUB_PR": "https://github.com/${{github.repository}}/pull/${{github.event.number}}",
+#              "GITHUB_ACTOR": "${{ github.actor }}"
+#            }
+#        env:
+#          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      - uses: actions/github-script@v6
+        name: Add a Success comment to the PR
+        if: ${{ success() }}
+        with:
+          github-token: ${{ secrets.WS_14202_PRCOMMENTINGFROMACTIONS }}
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '### ✅ These changes are fully compatible with the HotChocolate GraphQL engine 🎉'
+            }) 
+            
