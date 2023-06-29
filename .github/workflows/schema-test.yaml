@@ -2,6 +2,7 @@ name: Run Schema Comparison Test
 on: [pull_request]
 jobs:
   schema-comparison-test:
+    if: github.event.pull_request.draft == false
     name: Schema Comparison Test
     runs-on: ubuntu-latest
     steps:
