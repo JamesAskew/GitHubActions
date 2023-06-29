@@ -8,5 +8,13 @@ jobs:
     name: echo something
     runs-on: ubuntu-latest
     steps:
-      - name: echo Hello World
-        run: echo "Hello World"
+      - uses: actions/github-script@v6
+        name: Add a comment to the PR
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: 'Hello World'
+            })
